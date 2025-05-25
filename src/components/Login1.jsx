@@ -1,7 +1,7 @@
 /*
 Testler:
 
-Login componentinde usehistory kullanılmış
+Login componentinde useHistory kullanılmış
 Login componentinde form verileri için useState kullanılmış ve başlangıç değeri tanımlanmış
 Login componentinde handleChange fonksiyonu tanımlanmış
 Login componentinde handleSubmit fonksiyonu tanımlanmış
@@ -13,21 +13,28 @@ Login form doğru email, yanlış password ile doldurulunca error sayfasına yö
 */
 
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
-import axios, { useState } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+
 
 
 
 export default function Login() {
 
-    const [a, setA] = useState();
+    const history = useHistory();
+    const [formData, setFormData] = useState([]);
 
-    const handleChange = () => {
-
+    const handleChange = (event) => {
+        setFormData(event.target.value);
     }
 
-    const handleSubmit = () => {
-        preventDefault();
-        axios.get().then().catch()
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        axios
+            .get(history)
+            .then((response) => { setFormData(response.data) })
+            .catch((error) => { console.log(error) })
     }
 
     return (
@@ -39,6 +46,7 @@ export default function Login() {
                     name="email"
                     placeholder="Enter your email"
                     type="email"
+                    onChange={handleChange}
                 />
             </FormGroup>
             <FormGroup>
@@ -48,9 +56,10 @@ export default function Login() {
                     name="password"
                     placeholder="Enter your password "
                     type="password"
+                    onChange={handleChange}
                 />
             </FormGroup>
-            <Button color="primary">Sign In</Button>
+            <Button color="primary" onSubmit={handleSubmit}>Sign In</Button>
         </Form>
     );
 }
