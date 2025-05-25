@@ -18,21 +18,27 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
 
+const initialForm = {
+    email: "",
+    password: "",
+    terms: false
+}
 
 
 export default function Login() {
 
     const history = useHistory();
-    const [formData, setFormData] = useState([]);
+    const [formData, setFormData] = useState(initialForm);
 
     const handleChange = (event) => {
-        setFormData(event.target.value);
+        let { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
     }
 
     const handleSubmit = (event) => {
         event.preventDefault();
         axios
-            .get(history)
+            .get('https://6540a96145bedb25bfc247b4.mockapi.io/api/login')
             .then((response) => { setFormData(response.data) })
             .catch((error) => { console.log(error) })
     }
@@ -47,6 +53,7 @@ export default function Login() {
                     placeholder="Enter your email"
                     type="email"
                     onChange={handleChange}
+                    value={formData.email}
                 />
             </FormGroup>
             <FormGroup>
@@ -57,6 +64,7 @@ export default function Login() {
                     placeholder="Enter your password "
                     type="password"
                     onChange={handleChange}
+                    value={formData.password}
                 />
             </FormGroup>
             <Button color="primary" onSubmit={handleSubmit}>Sign In</Button>
